@@ -35,4 +35,11 @@ public class ScoreBoardTest {
                 () -> board.startGame("Spain", "Brazil"));
         assertTrue(ex.getMessage().contains("already started"));
     }
+
+    @Test
+    void finishGameRemovesIt() {
+        board.startGame("Germany", "France");
+        board.finishGame("Germany", "France");
+        assertTrue(board.getSummary().isEmpty());
+    }
 }
