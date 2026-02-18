@@ -73,4 +73,37 @@ public class ScoreBoardTest {
         assertThrows(NoSuchElementException.class,
                 () -> board.updateScore("Non", "Existing", 1, 2));
     }
+
+    @Test
+    void summaryIsOrderedByTotalScoreAndRecency() {
+        // Insert in a particular order to test tie‑breaker
+        board.startGame("Mexico", "Canada");
+        board.updateScore("Mexico", "Canada", 0, 5);          // total 5
+
+        board.startGame("Spain", "Brazil");
+        board.updateScore("Spain", "Brazil", 10, 2);        // total 12
+
+        board.startGame("Germany", "France");
+        board.updateScore("Germany", "France", 2, 2);        // total 4
+
+        board.startGame("Uruguay", "Italy");
+        board.updateScore("Uruguay", "Italy", 6, 6);       // total 12 (added after Spain/Brazil)
+
+        board.startGame("Argentina", "Australia");
+        board.updateScore("Argentina", "Australia", 3, 1); // total 4 (added after Germany/France)
+
+        List<ScoreBoard.GameInfo> summary = board.getSummary();
+
+        assertEquals(5, summary.size());
+        // Expected order (most recent wins on equal totals)
+        ScoreBoard.GameInfo[] expected = {
+                new ScoreBoard.GameInfo("Uruguay", 6, "Italy", 6),
+                new ScoreBoard.GameInfo("Spain", 10, "Brazil", 2),
+                new ScoreBoard.GameInfo("Mexico", 0, "Canada", 5),
+                new ScoreBoard.GameInfo("Argentina", 3, "Australia", 1),
+                new ScoreBoard.GameInfo("Germany", 2, "France", 2)
+        };
+
+        assertArrayEquals(expected, summary.toArray());
+    }
 }
