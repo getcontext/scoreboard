@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,5 +42,11 @@ public class ScoreBoardTest {
         board.startGame("Germany", "France");
         board.finishGame("Germany", "France");
         assertTrue(board.getSummary().isEmpty());
+    }
+
+    @Test
+    void finishNonexistentGameThrows() {
+        assertThrows(NoSuchElementException.class,
+                () -> board.finishGame("Argentina", "Australia"));
     }
 }
