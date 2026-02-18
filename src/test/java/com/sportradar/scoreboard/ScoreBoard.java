@@ -1,9 +1,7 @@
 package com.sportradar.scoreboard;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * In‑memory scoreboard that supports the required operations:
@@ -29,17 +27,56 @@ public class ScoreBoard {
     private long nextInsertionId = 0L;
 
 
-
-    public void startGame(String mexico, String canada) {
+    /** Finishes (removes) an existing match. */
+    public void finishGame(String homeTeam, String awayTeam) {
+        String key = makeKey(homeTeam, awayTeam);
+        if (games.remove(key) == null) {
+            throw new NoSuchElementException(
+                    String.format("Game %s vs %s not found.", homeTeam, awayTeam));
+        }
     }
 
+    /**
+     * Updates the score of a previously started match.
+     *
+     * @throws IllegalArgumentException if a score is negative
+     * @throws NoSuchElementException   if the match does not exist
+     */
+    public void updateScore(String homeTeam, String awayTeam,
+                            int homeScore, int awayScore) {
+        if (homeScore < 0 || awayScore < 0) {
+            throw new IllegalArgumentException("Scores must be non‑negative integers.");
+        }
+        String key = makeKey(homeTeam, awayTeam);
+        Game game = games.get(key);
+        if (game == null) {
+            throw new NoSuchElementException(
+                    String.format("Game %s vs %s not found.", homeTeam, awayTeam));
+        }
+        game.setScore(homeScore, awayScore);
+    }
+
+    /**
+     * Returns a summary list ordered by:
+     * <ol>
+     *   <li>Total score descending</li>
+     *   <li>If total scores are equal – the most recently added game first</li>
+     * </ol>
+     *
+     * Each entry is a {@link GameInfo} DTO that contains the four fields
+     * requested by the consumer.
+     */
     public List<GameInfo> getSummary() {
-    }
-
-    public void finishGame(String germany, String france) {
-    }
-
-    public void updateScore(String uruguay, String italy, int i, int i1) {
+        List<GameInfo> collect = games.values().stream()
+                .sorted(Comparator
+                        .comparingInt(Game::totalScore).reversed()
+                        .thenComparing(Game::getInsertionOrder)
+                                .reversed())
+                .map(g -> new GameInfo(
+                        g.getHomeTeam(), g.getHomeScore(),
+                        g.getAwayTeam(), g.getAwayScore()))
+                .collect(Collectors.toList());
+        return collect;
     }
 
     /** Simple DTO returned by {@link #getSummary()}. */
@@ -78,5 +115,10 @@ public class ScoreBoard {
         public int hashCode() {
             return Objects.hash(homeTeam, homeScore, awayTeam, awayScore);
         }
+    }
+
+    /** Helper to build the map key – order matters. */
+    private static String makeKey(String home, String away) {
+        return home + "|" + away;
     }
 }
