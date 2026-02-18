@@ -114,8 +114,7 @@ public class ScoreBoard {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof GameInfo)) return false;
-            GameInfo other = (GameInfo) o;
+            if (!(o instanceof GameInfo other)) return false;
             return homeScore == other.homeScore &&
                     awayScore == other.awayScore &&
                     homeTeam.equals(other.homeTeam) &&
