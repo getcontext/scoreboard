@@ -1,9 +1,35 @@
 package com.sportradar.scoreboard;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
+/**
+ * In‑memory scoreboard that supports the required operations:
+ * <ul>
+ *   <li>startGame</li>
+ *   <li>finishGame</li>
+ *   <li>updateScore</li>
+ *   <li>getSummary</li>
+ * </ul>
+ *
+ * The implementation follows the Single‑Responsibility Principle – it only
+ * knows how to store, update and query {@link Game} objects.
+ */
 public class ScoreBoard {
+
+    /**
+     * LinkedHashMap preserves insertion order, which we need to resolve
+     * ties when total scores are equal (most‑recently added wins).
+     */
+    private final Map<String, Game> games = new LinkedHashMap<>();
+
+    /** Monotonic counter used to give each game a unique insertion order. */
+    private long nextInsertionId = 0L;
+
+
+
     public void startGame(String mexico, String canada) {
     }
 
