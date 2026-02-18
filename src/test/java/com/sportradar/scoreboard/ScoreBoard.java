@@ -26,6 +26,17 @@ public class ScoreBoard {
     /** Monotonic counter used to give each game a unique insertion order. */
     private long nextInsertionId = 0L;
 
+    /** Starts a new match with a 0‑0 score. */
+    public void startGame(String homeTeam, String awayTeam) {
+        Objects.requireNonNull(homeTeam);
+        Objects.requireNonNull(awayTeam);
+        String key = makeKey(homeTeam, awayTeam);
+        if (games.containsKey(key)) {
+            throw new IllegalArgumentException(
+                    String.format("Game %s vs %s already started.", homeTeam, awayTeam));
+        }
+        games.put(key, new Game(homeTeam, awayTeam, nextInsertionId++));
+    }
 
     /** Finishes (removes) an existing match. */
     public void finishGame(String homeTeam, String awayTeam) {
