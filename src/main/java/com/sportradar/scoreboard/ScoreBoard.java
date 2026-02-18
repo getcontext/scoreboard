@@ -81,8 +81,9 @@ public class ScoreBoard {
         List<GameInfo> collect = games.values().stream()
                 .sorted(Comparator
                         .comparingInt(Game::totalScore).reversed()
-                        .thenComparing(Game::getInsertionOrder)
-                                .reversed())
+                        .thenComparing(Comparator
+                                .comparingLong(Game::getInsertionOrder)
+                                .reversed()))
                 .map(g -> new GameInfo(
                         g.getHomeTeam(), g.getHomeScore(),
                         g.getAwayTeam(), g.getAwayScore()))
