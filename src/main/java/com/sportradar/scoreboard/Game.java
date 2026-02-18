@@ -32,7 +32,6 @@ public class Game {
     public String getAwayTeam() { return awayTeam; }
     public int getHomeScore() { return homeScore; }
     public int getAwayScore() { return awayScore; }
-    public Instant getCreatedAt() { return createdAt; }
     public long getInsertionOrder() { return insertionOrder; }
 
     public void setScore(int homeScore, int awayScore) {
@@ -44,8 +43,4 @@ public class Game {
         return homeScore + awayScore;
     }
 
-    /** Unique key used in the board’s map – order matters (home vs away). */
-    public String key() {
-        return homeTeam + "|" + awayTeam;
-    }
 }
