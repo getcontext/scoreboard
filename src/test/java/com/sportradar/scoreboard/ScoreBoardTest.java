@@ -49,4 +49,14 @@ public class ScoreBoardTest {
         assertThrows(NoSuchElementException.class,
                 () -> board.finishGame("Argentina", "Australia"));
     }
+
+    @Test
+    void updateScoreChangesValues() {
+        board.startGame("Uruguay", "Italy");
+        board.updateScore("Uruguay", "Italy", 6, 6);
+        List<ScoreBoard.GameInfo> summary = board.getSummary();
+        ScoreBoard.GameInfo g = summary.get(0);
+        assertEquals(6, g.homeScore);
+        assertEquals(6, g.awayScore);
+    }
 }
