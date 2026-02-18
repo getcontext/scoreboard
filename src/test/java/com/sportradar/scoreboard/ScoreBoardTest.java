@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ScoreBoardTest {
 
@@ -26,5 +26,13 @@ public class ScoreBoardTest {
         assertEquals(0, g.homeScore);
         assertEquals("Canada", g.awayTeam);
         assertEquals(0, g.awayScore);
+    }
+
+    @Test
+    void startGameDuplicateThrows() {
+        board.startGame("Spain", "Brazil");
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> board.startGame("Spain", "Brazil"));
+        assertTrue(ex.getMessage().contains("already started"));
     }
 }
