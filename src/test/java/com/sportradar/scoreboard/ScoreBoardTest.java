@@ -59,4 +59,18 @@ public class ScoreBoardTest {
         assertEquals(6, g.homeScore);
         assertEquals(6, g.awayScore);
     }
+
+    @Test
+    void updateScoreNegativeThrows() {
+        board.startGame("Argentina", "Australia");
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> board.updateScore("Argentina", "Australia", -1, 2));
+        assertTrue(ex.getMessage().contains("non‑negative"));
+    }
+
+    @Test
+    void updateScoreNonexistentThrows() {
+        assertThrows(NoSuchElementException.class,
+                () -> board.updateScore("Non", "Existing", 1, 2));
+    }
 }
