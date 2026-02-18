@@ -78,7 +78,7 @@ public class ScoreBoard {
      * requested by the consumer.
      */
     public List<GameInfo> getSummary() {
-        List<GameInfo> collect = games.values().stream()
+        return games.values().stream()
                 .sorted(Comparator
                         .comparingInt(Game::totalScore).reversed()
                         .thenComparing(Comparator
@@ -88,7 +88,6 @@ public class ScoreBoard {
                         g.getHomeTeam(), g.getHomeScore(),
                         g.getAwayTeam(), g.getAwayScore()))
                 .collect(Collectors.toList());
-        return collect;
     }
 
     /** Simple DTO returned by {@link #getSummary()}. */
